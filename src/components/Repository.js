@@ -1,7 +1,13 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { number, string } from "prop-types";
+import { noop } from "ramda-extension";
 
-const Repository = ({ id, name, html_url, description, stargazers_count }) => {
+const Repository = ({ id, name, html_url, description, stargazers_count, favorites = {}, setFavorites = noop }) => {
+  const handleChange = useCallback(
+    () => setFavorites(favorites[id] ? { ...favorites, [id]: undefined } : { ...favorites, [id]: true }),
+    [id, favorites, setFavorites]
+  );
+
   return (
     <div className="card-body">
       <h3 className="card-title">
@@ -9,15 +15,21 @@ const Repository = ({ id, name, html_url, description, stargazers_count }) => {
           {name}
         </a>
       </h3>
-      <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+      <h6 className="card-subtitle mb-2 text-muted">{`\u2605 ${stargazers_count}`}</h6>
       <p className="card-text">{description}</p>
-      <div>{stargazers_count}</div>
-      <a href="." className="card-link">
-        Card link
-      </a>
-      <a href="." className="card-link">
-        Another link
-      </a>
+
+      <div className="form-check form-switch text-start">
+        <input
+          className="form-check-input"
+          type="checkbox"
+          id="favorite"
+          checked={!!favorites[id]}
+          onChange={handleChange}
+        />
+        <label className="form-check-label" htmlFor="favorite">
+          Favorite
+        </label>
+      </div>
     </div>
   );
 };

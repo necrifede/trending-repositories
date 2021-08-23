@@ -1,12 +1,14 @@
 import React, { useCallback } from "react";
 import { number, string } from "prop-types";
 import { noop } from "ramda-extension";
+import uniqid from "uniqid";
 
 const Repository = ({ id, name, html_url, description, stargazers_count, favorites = {}, setFavorites = noop }) => {
   const handleChange = useCallback(
     () => setFavorites(favorites[id] ? { ...favorites, [id]: undefined } : { ...favorites, [id]: true }),
     [id, favorites, setFavorites]
   );
+  const checkboxId = `favorite-${uniqid()}`;
 
   return (
     <div className="card-body">
@@ -22,11 +24,11 @@ const Repository = ({ id, name, html_url, description, stargazers_count, favorit
         <input
           className="form-check-input"
           type="checkbox"
-          id="favorite"
+          id={checkboxId}
           checked={!!favorites[id]}
           onChange={handleChange}
         />
-        <label className="form-check-label" htmlFor="favorite">
+        <label className="form-check-label" htmlFor={checkboxId}>
           Favorite
         </label>
       </div>

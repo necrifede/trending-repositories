@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { bool } from "prop-types";
 import axios from "axios";
-// import PropTypes from "prop-types";
 import Repository from "./Repository";
 import { host, pathname, getAWeekAgo } from "../utils";
+import { cx } from "ramda-extension/";
 
 const url = new URL(host);
 url.pathname = pathname;
 
-const RepositoriesList = () => {
+const RepositoriesList = ({ favoritesOnly = false }) => {
   const [repositories, setRepositories] = useState([]);
   const [favorites, setFavorites] = useState(JSON.parse(localStorage.getItem("favorites")) || {});
 
@@ -31,7 +32,7 @@ const RepositoriesList = () => {
   return (
     <>
       {repositories.map(({ id, ...repository }) => (
-        <section key={id} className="card mb-1">
+        <section key={id} className={cx("card", "mb-1", { "d-none": favoritesOnly && !favorites[id] })}>
           <Repository {...repository} id={id} favorites={favorites} setFavorites={setFavorites} />
         </section>
       ))}
@@ -39,6 +40,8 @@ const RepositoriesList = () => {
   );
 };
 
-RepositoriesList.propTypes = {};
+RepositoriesList.propTypes = {
+  favoritesOnly: bool,
+};
 
 export default RepositoriesList;

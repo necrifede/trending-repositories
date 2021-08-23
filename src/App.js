@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { cx, valueMirror } from "ramda-extension";
 import "./App.css";
-import { RepositoriesList } from "./components";
+import { FavoritesList, RepositoriesList } from "./components";
 
 const tabs = valueMirror(["REPOSITORIES", "FAVORITES"]);
 
@@ -25,7 +25,8 @@ function App() {
         </button>
       </nav>
       <main className="card-body">
-        <RepositoriesList />
+        {tab === tabs.REPOSITORIES && <RepositoriesList />}
+        {tab === tabs.FAVORITES && <FavoritesList />}
       </main>
     </div>
   );
